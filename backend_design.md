@@ -15,7 +15,7 @@
         {
             "teamUID": "uint",
             "score": "uint",
-            "percentComplete": "float"
+            "percentComplete": "uint"
         }
     ],
     "mession":[
