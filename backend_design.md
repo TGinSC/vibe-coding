@@ -12,28 +12,25 @@
     "userUID": "uint",
     "userPassword": "uint",
     "teamBelong": [
-        {
-            "teamUID": "uint",
-            "score": "uint",
-            "percentComplete": "uint"
-        }
+        "teamUID|score|percentComplate"
     ],
-    "mession":[
-        "uint"
+    "messions":[
+        "string"
     ],
     "teamOwn":[
-        "uint"
+        "string"
     ]
 }
 // team
 {
     "teamUID": "uint",
+    "teamLeader": "uint",
     "teamPassword": "uint",
-    "memberInclude": [
-        "uint"
+    "membersInclude": [
+        "string"
     ],
     "itemInclude": [
-        "uint"
+        "string"
     ]
 }
 // item
