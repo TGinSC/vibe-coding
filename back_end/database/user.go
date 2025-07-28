@@ -10,9 +10,7 @@ import (
 // 格式 "teamUID|score|percentComplate"
 // 新建一个 TeamBelongModel 来实现转换
 type TeamsBelong []string
-
 type Messions []string
-
 type TeamsOwn []string
 
 type UserModel struct {

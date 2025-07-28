@@ -12,7 +12,7 @@
     "userUID": "uint",
     "userPassword": "uint",
     "teamBelong": [
-        "teamUID|score|percentComplate"
+        "teamUID|score|percentComplete"
     ],
     "messions":[
         "string"
