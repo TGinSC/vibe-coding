@@ -11,13 +11,13 @@
 {
     "userUID": "uint",
     "userPassword": "uint",
-    "teamBelong": [
+    "teamsBelong": [
         "teamUID|score|percentComplete"
     ],
     "messions":[
         "string"
     ],
-    "teamOwn":[
+    "teamsOwn":[
         "string"
     ]
 }
@@ -40,5 +40,19 @@
     "shouldBeCompletedBy": "uint",
     "beCompletedBy": "uint",
     "isComplete": "bool"
+}
+```
+
+其中 TeamsBelong 返回至 front end 的结构为
+
+```json
+{
+    "TeamsBelong": [
+        {
+            "teamUID": "uint",
+            "score": "uint",
+            "percentComplete": "uint"
+        }
+    ]
 }
 ```
