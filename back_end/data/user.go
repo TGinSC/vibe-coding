@@ -52,7 +52,7 @@ func (teamsOwns TeamsOwns) ToStore() (teamsOwns__ database.TeamsOwn) {
 func (user User) ToStore() *database.UserModel {
 	return &database.UserModel{
 		UserUID:      user.UserUID,
-		UserPassWord: user.UserPassWord,
+		UserPassword: user.UserPassWord,
 		TeamsBelong:  user.TeamsBelong.ToStore(),
 		Messions:     user.Messions.ToStore(),
 		TeamsOwn:     user.TeamsOwn.ToStore(),

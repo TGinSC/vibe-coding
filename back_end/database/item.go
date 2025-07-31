@@ -30,7 +30,7 @@ func (*ItemModel) Delete(id uint) error {
 }
 
 func (*ItemModel) Updata(item *ItemModel) error {
-	return database.Model(&ItemModel{}).Where("uid = ?", item.ItemUID).Updates(item).Error
+	return database.Model(&ItemModel{}).Where("item_uid = ?", item.ItemUID).Updates(item).Error
 }
 
 func (*ItemModel) TableName() string {

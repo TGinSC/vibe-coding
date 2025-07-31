@@ -35,7 +35,7 @@ func (*TeamModel) Delete(id uint) error {
 }
 
 func (*TeamModel) Updata(item *TeamModel) error {
-	return database.Model(&TeamModel{}).Where("uid = ?", item.TeamUID).Updates(item).Error
+	return database.Model(&TeamModel{}).Where("team_uid = ?", item.TeamUID).Updates(item).Error
 }
 
 func (*TeamModel) TableName() string {
