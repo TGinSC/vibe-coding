@@ -16,9 +16,9 @@ type TeamsOwn []string
 type UserModel struct {
 	UserUID      uint        `gorm:"unique;primarykey" json:"userUID"`
 	UserPassWord uint        `json:"userPassword"`
-	TeamsBelong  TeamsBelong `json:"teamBelong"`
+	TeamsBelong  TeamsBelong `json:"teamsBelong"`
 	Messions     Messions    `json:"messions"`
-	TeamsOwn     TeamsOwn    `json:"teamOwn"`
+	TeamsOwn     TeamsOwn    `json:"teamsOwn"`
 }
 
 func NewUserModel() *UserModel {
