@@ -2,13 +2,16 @@ package main
 
 import (
 	"contribution/database"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	database.Open("data.db")
-	server := gin.Default()
+	database.StoreExampleData()
+	database.GetExampleData()
+	database.UpdataExampleData()
+	database.GetExampleData()
+	database.DeleteExampleData()
+	// server := gin.Default()
 
-	server.Run()
+	// server.Run()
 }
