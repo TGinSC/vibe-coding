@@ -17,7 +17,7 @@ func NewItemModel() *ItemModel {
 }
 
 func (*ItemModel) Get(uid uint) (res ItemModel, err error) {
-	err = database.Model(&TeamModel{}).First(&res, uid).Error
+	err = database.Model(&ItemModel{}).First(&res, uid).Error
 	return
 }
 
