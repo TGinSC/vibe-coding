@@ -14,6 +14,31 @@ type Item struct {
 	IsComplete bool      `json:"isComplete"`
 }
 
+func NewItem() *Item {
+	return &Item{}
+}
+
+func (*Item) Get(uid uint) (res Item, err error) {
+	item, err := database.NewItemModel().Get(uid)
+	res = ItemToUse(item)
+	return
+}
+
+func (*Item) Create(item *Item) error {
+	return database.NewItemModel().Create(item.ToStore())
+}
+
+func (*Item) Delete(uid uint) error {
+	return database.NewItemModel().Delete(uid)
+}
+
+func (*Item) Updata(item *Item) error {
+	return database.NewItemModel().Updata(item.ToStore())
+}
+
+// 从参与运算的对象转为存储形式
+
+// Item 从参与运算的对象转为存储形式
 func (item Item) ToStore() *database.ItemModel {
 	return &database.ItemModel{
 		ItemUID:    item.ItemUID,
