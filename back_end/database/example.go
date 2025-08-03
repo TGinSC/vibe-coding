@@ -13,7 +13,7 @@ func StoreExampleData() {
 	err = NewUserModel().Create(&UserModel{
 		UserUID:      1,
 		UserPassword: 1,
-		TeamsBelong:  TeamsBelong{"1|1|1", "1|1|1s"},
+		TeamsBelong:  TeamsBelong{"1|1|1", "1|1|1"},
 		Messions:     Messions{"1"},
 		TeamsOwn:     TeamsOwn{"1"},
 	})
