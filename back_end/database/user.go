@@ -15,10 +15,10 @@ type TeamsOwn []string
 
 type UserModel struct {
 	UserUID      uint        `gorm:"unique;primarykey" json:"userUID"`
-	UserPassWord uint        `json:"userPassword"`
-	TeamsBelong  TeamsBelong `json:"teamBelong"`
+	UserPassword uint        `json:"userPassword"`
+	TeamsBelong  TeamsBelong `json:"teamsBelong"`
 	Messions     Messions    `json:"messions"`
-	TeamsOwn     TeamsOwn    `json:"teamOwn"`
+	TeamsOwn     TeamsOwn    `json:"teamsOwn"`
 }
 
 func NewUserModel() *UserModel {
@@ -39,7 +39,7 @@ func (*UserModel) Delete(id uint) error {
 }
 
 func (*UserModel) Updata(item *UserModel) error {
-	return database.Model(&UserModel{}).Where("uid = ?", item.UserUID).Updates(item).Error
+	return database.Model(&UserModel{}).Where("user_uid = ?", item.UserUID).Updates(item).Error
 }
 
 func (*UserModel) TableName() string {

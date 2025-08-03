@@ -17,7 +17,7 @@ func NewItemModel() *ItemModel {
 }
 
 func (*ItemModel) Get(uid uint) (res ItemModel, err error) {
-	err = database.Model(&TeamModel{}).First(&res, uid).Error
+	err = database.Model(&ItemModel{}).First(&res, uid).Error
 	return
 }
 
@@ -30,7 +30,7 @@ func (*ItemModel) Delete(id uint) error {
 }
 
 func (*ItemModel) Updata(item *ItemModel) error {
-	return database.Model(&ItemModel{}).Where("uid = ?", item.ItemUID).Updates(item).Error
+	return database.Model(&ItemModel{}).Where("item_uid = ?", item.ItemUID).Updates(item).Error
 }
 
 func (*ItemModel) TableName() string {
