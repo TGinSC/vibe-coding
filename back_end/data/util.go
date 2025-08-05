@@ -6,9 +6,11 @@ import (
 	"strings"
 )
 
-// 从存储转换为可参与运算的对象
-
-// TeamBelong 从存储转换为可参与运算的对象
+// TeamsBelongToUse 将数据库存储格式的团队归属信息转换为业务逻辑可用格式
+// 参数:
+//   - __tb__: 数据库存储格式的团队归属信息
+// 返回值:
+//   - tb: 业务逻辑可用的团队归属信息
 func TeamsBelongToUse(__tb__ database.TeamsBelong) (tb TeamBelongs) {
 	for _, str := range __tb__ {
 		strs := strings.Split(str, "|")
@@ -24,7 +26,11 @@ func TeamsBelongToUse(__tb__ database.TeamsBelong) (tb TeamBelongs) {
 	return
 }
 
-// Messions 从存储转换为可参与运算的对象
+// MessionsToUse 将数据库存储格式的任务列表转换为业务逻辑可用格式
+// 参数:
+//   - __m__: 数据库存储格式的任务列表
+// 返回值:
+//   - m: 业务逻辑可用的任务列表
 func MessionsToUse(__m__ database.Messions) (m Messions) {
 	for _, str := range __m__ {
 		mession, _ := strconv.Atoi(str)
@@ -33,7 +39,11 @@ func MessionsToUse(__m__ database.Messions) (m Messions) {
 	return
 }
 
-// TeamsOwn 从存储转换为可参与运算的对象
+// TeamsOwnToUse 将数据库存储格式的团队拥有列表转换为业务逻辑可用格式
+// 参数:
+//   - __to__: 数据库存储格式的团队拥有列表
+// 返回值:
+//   - to: 业务逻辑可用的团队拥有列表
 func TeamsOwnToUse(__to__ database.TeamsOwn) (to TeamOwns) {
 	for _, str := range __to__ {
 		teamown, _ := strconv.Atoi(str)
@@ -42,7 +52,11 @@ func TeamsOwnToUse(__to__ database.TeamsOwn) (to TeamOwns) {
 	return
 }
 
-// User 从存储转换为可参与运算的对象
+// UserToUse 将数据库存储格式的用户信息转换为业务逻辑可用格式
+// 参数:
+//   - __user__: 数据库存储格式的用户信息
+// 返回值:
+//   - user: 业务逻辑可用的用户信息
 func UserToUse(__user__ database.UserModel) (user User) {
 	user = User{
 		UserUID:      __user__.UserUID,
@@ -54,7 +68,11 @@ func UserToUse(__user__ database.UserModel) (user User) {
 	return
 }
 
-// Members 从存储转换为可参与运算的对象
+// MembersToUse 将数据库存储格式的成员列表转换为业务逻辑可用格式
+// 参数:
+//   - __m__: 数据库存储格式的成员列表
+// 返回值:
+//   - m: 业务逻辑可用的成员列表
 func MembersToUse(__m__ database.Members) (m Members) {
 	for _, str := range __m__ {
 		member, _ := strconv.Atoi(str)
@@ -63,7 +81,11 @@ func MembersToUse(__m__ database.Members) (m Members) {
 	return
 }
 
-// Items 从存储转换为可参与运算的对象
+// ItemsToUse 将数据库存储格式的项目项列表转换为业务逻辑可用格式
+// 参数:
+//   - __items__: 数据库存储格式的项目项列表
+// 返回值:
+//   - items: 业务逻辑可用的项目项列表
 func ItemsToUse(__items__ database.Items) (items Items) {
 	for _, str := range __items__ {
 		item, _ := strconv.Atoi(str)
@@ -72,7 +94,11 @@ func ItemsToUse(__items__ database.Items) (items Items) {
 	return
 }
 
-// Team 从存储转换为可参与运算的对象
+// TeamToUse 将数据库存储格式的团队信息转换为业务逻辑可用格式
+// 参数:
+//   - __team__: 数据库存储格式的团队信息
+// 返回值:
+//   - team: 业务逻辑可用的团队信息
 func TeamToUse(__team__ database.TeamModel) (team Team) {
 	team = Team{
 		TeamUID:        __team__.TeamUID,
@@ -84,7 +110,11 @@ func TeamToUse(__team__ database.TeamModel) (team Team) {
 	return
 }
 
-// Item 从存储转换为可参与运算的对象
+// ItemToUse 将数据库存储格式的项目项信息转换为业务逻辑可用格式
+// 参数:
+//   - __item__: 数据库存储格式的项目项信息
+// 返回值:
+//   - item: 业务逻辑可用的项目项信息
 func ItemToUse(__item__ database.ItemModel) (item Item) {
 	item = Item{
 		ItemUID:    __item__.ItemUID,
