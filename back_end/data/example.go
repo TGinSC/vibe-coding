@@ -11,17 +11,17 @@ func StoreExampleData() {
 
 	// 创建示例用户数据
 	user := User{
-		UserUID:      1,              // 用户唯一标识符
-		UserPassword: 1,              // 用户密码（示例中使用简单数字）
-		TeamsBelong: TeamBelongs{     // 用户所属的团队列表
+		UserUID:      1,   // 用户唯一标识符
+		UserPassword: "1", // 用户密码（示例中使用简单数字）
+		TeamsBelong: TeamBelongs{ // 用户所属的团队列表
 			TeamBelong{
-				TeamUID:         1,   // 团队唯一标识符
-				Score:           1,   // 用户在该团队中的分数
-				PercentComplete: 1,   // 用户在该团队中的完成度百分比
+				TeamUID:         1, // 团队唯一标识符
+				Score:           1, // 用户在该团队中的分数
+				PercentComplete: 1, // 用户在该团队中的完成度百分比
 			},
 		},
-		Messions: Messions{1},        // 用户的任务列表
-		TeamsOwn: TeamOwns{1},        // 用户拥有的团队列表
+		Messions: Messions{1}, // 用户的任务列表
+		TeamsOwn: TeamOwns{1}, // 用户拥有的团队列表
 	}
 
 	// 将用户数据存储到数据库
@@ -33,11 +33,11 @@ func StoreExampleData() {
 
 	// 创建示例团队数据
 	team := Team{
-		TeamUID:        1,            // 团队唯一标识符
-		TeamLeader:     1,            // 团队领导的用户ID
-		TeamPassword:   1,            // 团队密码（示例中使用简单数字）
-		MembersInclude: Members{1},   // 团队成员列表
-		ItemsInclude:   Items{1},     // 团队项目项列表
+		TeamUID:        1,          // 团队唯一标识符
+		TeamLeader:     1,          // 团队领导的用户ID
+		TeamPassword:   1,          // 团队密码（示例中使用简单数字）
+		MembersInclude: Members{1}, // 团队成员列表
+		ItemsInclude:   Items{1},   // 团队项目项列表
 	}
 
 	// 将团队数据存储到数据库
@@ -49,11 +49,11 @@ func StoreExampleData() {
 
 	// 创建示例项目项数据
 	item := Item{
-		ItemUID:    1,                // 项目项唯一标识符
-		Score:      1,                // 项目项分数
-		ShouldBCB:  1,                // 应该完成该项目项的人员
-		BCB:        1,                // 实际完成该项目项的人员
-		IsComplete: false,            // 项目项是否已完成
+		ItemUID:    1,     // 项目项唯一标识符
+		Score:      1,     // 项目项分数
+		ShouldBCB:  1,     // 应该完成该项目项的人员
+		BCB:        1,     // 实际完成该项目项的人员
+		IsComplete: false, // 项目项是否已完成
 	}
 
 	// 将项目项数据存储到数据库
@@ -79,7 +79,7 @@ func GetExampleData() {
 	log.Println(user)
 
 	// 获取团队数据
-	team, err := NewUser().Get(uint(1))  // 注意：这里可能是示例代码错误，应该是NewTeam().Get
+	team, err := NewUser().Get(uint(1)) // 注意：这里可能是示例代码错误，应该是NewTeam().Get
 	if err != nil {
 		panic(err)
 	}
@@ -104,22 +104,22 @@ func UpdataExampleData() {
 
 	// 更新用户数据
 	user := User{
-		UserUID:      1,                    // 用户唯一标识符
-		UserPassword: 2,                    // 更新后的用户密码
-		TeamsBelong: TeamBelongs{           // 更新后的用户所属团队列表
+		UserUID:      1,   // 用户唯一标识符
+		UserPassword: "2", // 更新后的用户密码
+		TeamsBelong: TeamBelongs{ // 更新后的用户所属团队列表
 			TeamBelong{
-				TeamUID:         1,         // 团队1
+				TeamUID:         1, // 团队1
 				Score:           1,
 				PercentComplete: 1,
 			},
 			TeamBelong{
-				TeamUID:         2,         // 新增团队2
+				TeamUID:         2, // 新增团队2
 				Score:           1,
 				PercentComplete: 1,
 			},
 		},
-		Messions: Messions{1, 2},           // 更新后的用户任务列表
-		TeamsOwn: TeamOwns{1, 2},           // 更新后的用户拥有团队列表
+		Messions: Messions{1, 2}, // 更新后的用户任务列表
+		TeamsOwn: TeamOwns{1, 2}, // 更新后的用户拥有团队列表
 	}
 
 	// 更新用户数据到数据库
@@ -131,11 +131,11 @@ func UpdataExampleData() {
 
 	// 更新团队数据
 	team := Team{
-		TeamUID:        1,                  // 团队唯一标识符
-		TeamLeader:     1,                  // 团队领导
-		TeamPassword:   2,                  // 更新后的团队密码
-		MembersInclude: Members{1, 2},      // 更新后的团队成员列表
-		ItemsInclude:   Items{1, 2},        // 更新后的团队项目项列表
+		TeamUID:        1,             // 团队唯一标识符
+		TeamLeader:     1,             // 团队领导
+		TeamPassword:   2,             // 更新后的团队密码
+		MembersInclude: Members{1, 2}, // 更新后的团队成员列表
+		ItemsInclude:   Items{1, 2},   // 更新后的团队项目项列表
 	}
 
 	// 更新团队数据到数据库
@@ -147,11 +147,11 @@ func UpdataExampleData() {
 
 	// 更新项目项数据
 	item := Item{
-		ItemUID:    1,                      // 项目项唯一标识符
-		Score:      2,                      // 更新后的项目项分数
-		ShouldBCB:  1,                      // 应该完成该项目项的人员
-		BCB:        1,                      // 实际完成该项目项的人员
-		IsComplete: true,                   // 项目项已完成
+		ItemUID:    1,    // 项目项唯一标识符
+		Score:      2,    // 更新后的项目项分数
+		ShouldBCB:  1,    // 应该完成该项目项的人员
+		BCB:        1,    // 实际完成该项目项的人员
+		IsComplete: true, // 项目项已完成
 	}
 
 	// 更新项目项数据到数据库

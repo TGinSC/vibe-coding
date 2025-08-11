@@ -25,7 +25,7 @@ type TeamOwns []uint
 // User 定义用户结构体，表示系统中的一个用户
 type User struct {
 	UserUID      uint        `json:"userUID"`      // 用户唯一标识符
-	UserPassword uint        `json:"userPassword"` // 用户密码
+	UserPassword string      `json:"userPassword"` // 用户密码
 	TeamsBelong  TeamBelongs `json:"teamsBelong"`  // 用户所属的团队列表
 	Messions     Messions    `json:"messions"`     // 用户的任务列表
 	TeamsOwn     TeamOwns    `json:"teamsOwn"`     // 用户拥有的团队列表
@@ -39,6 +39,7 @@ func NewUser() *User {
 // Get 根据唯一标识符获取一个用户信息
 // 参数:
 //   - uid: 用户的唯一标识符
+//
 // 返回值:
 //   - res: 获取到的用户数据
 //   - err: 可能出现的错误
@@ -51,6 +52,7 @@ func (*User) Get(uid uint) (res User, err error) {
 // Create 创建一个新的用户并存储到数据库
 // 参数:
 //   - item: 要创建的用户指针
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (*User) Create(item *User) error {
@@ -60,6 +62,7 @@ func (*User) Create(item *User) error {
 // Delete 根据唯一标识符删除一个用户
 // 参数:
 //   - uid: 要删除的用户的唯一标识符
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (*User) Delete(uid uint) error {
@@ -69,6 +72,7 @@ func (*User) Delete(uid uint) error {
 // Updata 更新一个用户的信息
 // 参数:
 //   - item: 包含更新信息的用户指针
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (*User) Updata(item *User) error {
@@ -85,6 +89,7 @@ func (*User) DataName() string {
 // ToStore 将TeamBelongs转换为数据库存储格式
 // 参数:
 //   - __tb__: 用户所属团队列表
+//
 // 返回值:
 //   - tb: 数据库可存储的团队列表格式
 func (__tb__ TeamBelongs) ToStore() (tb database.TeamsBelong) {
@@ -98,6 +103,7 @@ func (__tb__ TeamBelongs) ToStore() (tb database.TeamsBelong) {
 // ToStore 将Messions转换为数据库存储格式
 // 参数:
 //   - __messions__: 用户任务列表
+//
 // 返回值:
 //   - messions: 数据库可存储的任务列表格式
 func (__messions__ Messions) ToStore() (messions database.Messions) {
@@ -111,6 +117,7 @@ func (__messions__ Messions) ToStore() (messions database.Messions) {
 // ToStore 将TeamOwns转换为数据库存储格式
 // 参数:
 //   - __teamOwns__: 用户拥有的团队列表
+//
 // 返回值:
 //   - teamsOwns: 数据库可存储的团队列表格式
 func (__teamOwns__ TeamOwns) ToStore() (teamsOwns database.TeamsOwn) {
@@ -124,6 +131,7 @@ func (__teamOwns__ TeamOwns) ToStore() (teamsOwns database.TeamsOwn) {
 // ToStore 将用于业务逻辑的User对象转换为用于数据库存储的UserModel对象
 // 参数:
 //   - user: 要转换的用户对象
+//
 // 返回值:
 //   - *database.UserModel: 转换后的数据库模型对象
 func (user User) ToStore() *database.UserModel {
