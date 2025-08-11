@@ -6,6 +6,7 @@ import (
 	"crypto/subtle"
 	"encoding/hex"
 	"fmt"
+
 	"golang.org/x/crypto/argon2"
 )
 
@@ -45,6 +46,7 @@ type SimpleHash struct {
 // NewSimpleHash 创建一个新的SimpleHash实例
 // 参数:
 //   - config: 哈希配置参数
+//
 // 返回值:
 //   - *SimpleHash: 新创建的SimpleHash实例
 func NewSimpleHash(config HashConfig) *SimpleHash {
@@ -71,10 +73,10 @@ func NewDefaultHash() *SimpleHash {
 func (h *SimpleHash) GenerateSalt() ([]byte, error) {
 	// 创建指定长度的字节切片用于存储盐值
 	salt := make([]byte, h.config.SaltLength)
-	
+
 	// 从加密安全的随机数生成器读取随机数据
 	_, err := rand.Read(salt)
-	
+
 	// 返回生成的盐值和可能的错误
 	return salt, err
 }
@@ -83,32 +85,29 @@ func (h *SimpleHash) GenerateSalt() ([]byte, error) {
 // 使用Argon2ID算法结合随机盐值生成安全的密码哈希
 // 参数:
 //   - password: 需要哈希的明文密码
+//
 // 返回值:
 //   - *HashResult: 包含哈希值和盐值的结果结构
 //   - error: 可能出现的错误
-func (h *SimpleHash) HashPassword(password string) (*HashResult, error) {
-	// 生成随机盐值
-	salt, err := h.GenerateSalt()
+func (h *SimpleHash) HashPassword(password, salt string) (string, error) {
+	// 将十六进制编码的盐值解码为字节
+	saltBytes, err := hex.DecodeString(salt)
 	if err != nil {
-		return nil, fmt.Errorf("failed to generate salt: %w", err)
+		return "", fmt.Errorf("failed to decode salt: %w", err)
 	}
-
 	// 使用Argon2ID算法对密码进行哈希处理
 	// Argon2ID结合了Argon2I和Argon2D的优点，对时序攻击有更强的防护
-	hash := argon2.IDKey(
-		[]byte(password),        // 需要哈希的数据（密码）
-		salt,                    // 随机盐值
-		h.config.Iterations,     // 迭代次数
-		h.config.Memory,         // 内存使用量(KiB)
-		h.config.Parallelism,    // 并行度
-		h.config.KeyLength,      // 输出密钥长度
+	hashBytes := argon2.IDKey(
+		[]byte(password),     // 需要哈希的数据（密码）
+		saltBytes,            // 使用提供的盐值
+		h.config.Iterations,  // 迭代次数
+		h.config.Memory,      // 内存使用量(KiB)
+		h.config.Parallelism, // 并行度
+		h.config.KeyLength,   // 输出密钥长度
 	)
 
 	// 返回十六进制编码的哈希值和盐值
-	return &HashResult{
-		Hash: hex.EncodeToString(hash), // 将哈希值转换为十六进制字符串
-		Salt: hex.EncodeToString(salt), // 将盐值转换为十六进制字符串
-	}, nil
+	return hex.EncodeToString(hashBytes), nil
 }
 
 // VerifyPassword 验证给定密码是否与存储的哈希值匹配
@@ -117,6 +116,7 @@ func (h *SimpleHash) HashPassword(password string) (*HashResult, error) {
 //   - password: 需要验证的明文密码
 //   - hash: 存储的十六进制编码哈希值
 //   - salt: 存储的十六进制编码盐值
+//
 // 返回值:
 //   - bool: 密码是否匹配
 //   - error: 可能出现的错误，如解码失败
@@ -135,12 +135,12 @@ func (h *SimpleHash) VerifyPassword(password, hash, salt string) (bool, error) {
 
 	// 使用相同的参数对输入密码进行哈希处理
 	computedHash := argon2.IDKey(
-		[]byte(password),        // 输入密码
-		saltBytes,               // 使用存储的盐值
-		h.config.Iterations,     // 使用相同的迭代次数
-		h.config.Memory,         // 使用相同的内存参数
-		h.config.Parallelism,    // 使用相同的并行度
-		h.config.KeyLength,      // 使用相同的输出长度
+		[]byte(password),     // 输入密码
+		saltBytes,            // 使用存储的盐值
+		h.config.Iterations,  // 使用相同的迭代次数
+		h.config.Memory,      // 使用相同的内存参数
+		h.config.Parallelism, // 使用相同的并行度
+		h.config.KeyLength,   // 使用相同的输出长度
 	)
 
 	// 使用常量时间比较函数比较哈希值，防止时序攻击
