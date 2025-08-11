@@ -11,11 +11,11 @@ func StoreExampleData() {
 
 	// 创建示例用户模型数据
 	err = NewUserModel().Create(&UserModel{
-		UserUID:      1,                         // 用户唯一标识符
-		UserPassword: 1,                         // 用户密码（示例中使用简单数字）
-		TeamsBelong:  TeamsBelong{"1|1|1"},      // 用户所属团队信息（格式：团队ID|分数|完成度）
-		Messions:     Messions{"1"},             // 用户任务列表
-		TeamsOwn:     TeamsOwn{"1"},             // 用户拥有的团队列表
+		UserUID:      1,                    // 用户唯一标识符
+		UserPassword: "1",                  // 用户密码（示例中使用简单数字）
+		TeamsBelong:  TeamsBelong{"1|1|1"}, // 用户所属团队信息（格式：团队ID|分数|完成度）
+		Messions:     Messions{"1"},        // 用户任务列表
+		TeamsOwn:     TeamsOwn{"1"},        // 用户拥有的团队列表
 	})
 	if err != nil {
 		panic(err)
@@ -24,11 +24,11 @@ func StoreExampleData() {
 
 	// 创建示例团队模型数据
 	err = NewTeamModel().Create(&TeamModel{
-		TeamUID:        1,                       // 团队唯一标识符
-		TeamLeader:     1,                       // 团队领导的用户ID
-		TeamPassword:   1,                       // 团队密码（示例中使用简单数字）
-		MembersInclude: Members{"1"},            // 团队成员列表
-		ItemsInclude:   Items{"1"},              // 团队项目项列表
+		TeamUID:        1,            // 团队唯一标识符
+		TeamLeader:     1,            // 团队领导的用户ID
+		TeamPassword:   1,            // 团队密码（示例中使用简单数字）
+		MembersInclude: Members{"1"}, // 团队成员列表
+		ItemsInclude:   Items{"1"},   // 团队项目项列表
 	})
 	if err != nil {
 		panic(err)
@@ -37,11 +37,11 @@ func StoreExampleData() {
 
 	// 创建示例项目项模型数据
 	err = NewItemModel().Create(&ItemModel{
-		ItemUID:    1,                           // 项目项唯一标识符
-		Score:      1,                           // 项目项分数
-		ShouldBCB:  1,                           // 应该完成该项目项的人员
-		BCB:        1,                           // 实际完成该项目项的人员
-		IsComplete: false,                       // 项目项是否已完成
+		ItemUID:    1,     // 项目项唯一标识符
+		Score:      1,     // 项目项分数
+		ShouldBCB:  1,     // 应该完成该项目项的人员
+		BCB:        1,     // 实际完成该项目项的人员
+		IsComplete: false, // 项目项是否已完成
 	})
 	if err != nil {
 		panic(err)
@@ -86,8 +86,8 @@ func UpdataExampleData() {
 
 	// 更新用户模型数据
 	err = NewUserModel().Updata(&UserModel{
-		UserUID:      1,                         // 用户唯一标识符
-		UserPassword: 2,                         // 更新后的用户密码
+		UserUID:      1,   // 用户唯一标识符
+		UserPassword: "2", // 更新后的用户密码
 	})
 	if err != nil {
 		panic(err)
@@ -96,8 +96,8 @@ func UpdataExampleData() {
 
 	// 更新团队模型数据
 	err = NewTeamModel().Updata(&TeamModel{
-		TeamUID:      1,                         // 团队唯一标识符
-		TeamPassword: 2,                         // 更新后的团队密码
+		TeamUID:      1, // 团队唯一标识符
+		TeamPassword: 2, // 更新后的团队密码
 	})
 	if err != nil {
 		panic(err)
@@ -106,8 +106,8 @@ func UpdataExampleData() {
 
 	// 更新项目项模型数据
 	err = NewItemModel().Updata(&ItemModel{
-		ItemUID:    1,                           // 项目项唯一标识符
-		IsComplete: true,                        // 项目项已完成
+		ItemUID:    1,    // 项目项唯一标识符
+		IsComplete: true, // 项目项已完成
 	})
 	if err != nil {
 		panic(err)

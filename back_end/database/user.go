@@ -18,11 +18,11 @@ type TeamsOwn []string
 
 // UserModel 定义用户数据库模型结构体
 type UserModel struct {
-	UserUID      uint        `gorm:"unique;primarykey" json:"userUID"`  // 用户唯一标识符（主键）
-	UserPassword uint        `json:"userPassword"`    // 用户密码
-	TeamsBelong  TeamsBelong `json:"teamsBelong"`     // 用户所属的团队列表信息
-	Messions     Messions    `json:"messions"`        // 用户的任务列表
-	TeamsOwn     TeamsOwn    `json:"teamsOwn"`        // 用户拥有的团队列表
+	UserUID      uint        `gorm:"unique;primarykey" json:"userUID"` // 用户唯一标识符（主键）
+	UserPassword string      `json:"userPassword"`                     // 用户密码
+	TeamsBelong  TeamsBelong `json:"teamsBelong"`                      // 用户所属的团队列表信息
+	Messions     Messions    `json:"messions"`                         // 用户的任务列表
+	TeamsOwn     TeamsOwn    `json:"teamsOwn"`                         // 用户拥有的团队列表
 }
 
 // NewUserModel 创建并返回一个新的UserModel实例
@@ -33,6 +33,7 @@ func NewUserModel() *UserModel {
 // Get 根据唯一标识符从数据库获取一个用户信息
 // 参数:
 //   - uid: 用户的唯一标识符
+//
 // 返回值:
 //   - res: 获取到的用户数据
 //   - err: 可能出现的错误
@@ -44,6 +45,7 @@ func (*UserModel) Get(uid uint) (res UserModel, err error) {
 // Create 创建一个新的用户并存储到数据库
 // 参数:
 //   - item: 要创建的用户模型指针
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (*UserModel) Create(item *UserModel) error {
@@ -53,6 +55,7 @@ func (*UserModel) Create(item *UserModel) error {
 // Delete 根据唯一标识符从数据库删除一个用户
 // 参数:
 //   - id: 要删除的用户的唯一标识符
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (*UserModel) Delete(id uint) error {
@@ -62,6 +65,7 @@ func (*UserModel) Delete(id uint) error {
 // Updata 更新一个用户的信息到数据库
 // 参数:
 //   - item: 包含更新信息的用户模型指针
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (*UserModel) Updata(item *UserModel) error {
@@ -80,6 +84,7 @@ func (*UserModel) TableName() string {
 //   - teamUID: 团队唯一标识符
 //   - score: 用户在该团队中的分数
 //   - percentComplate: 用户在该团队中的完成度百分比
+//
 // 返回值:
 //   - string: 格式化的团队归属信息字符串
 func CreateTeamBelong(teamUID uint, score uint, percentComplate uint) string {
@@ -90,6 +95,7 @@ func CreateTeamBelong(teamUID uint, score uint, percentComplate uint) string {
 // Scan 实现sql.Scanner接口，用于从数据库读取TeamsBelong数据
 // 参数:
 //   - value: 从数据库读取的原始值
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (t *TeamsBelong) Scan(value interface{}) error {
@@ -108,6 +114,7 @@ func (t TeamsBelong) Value() (driver.Value, error) {
 // Scan 实现sql.Scanner接口，用于从数据库读取Messions数据
 // 参数:
 //   - value: 从数据库读取的原始值
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (t *Messions) Scan(value interface{}) error {
@@ -126,6 +133,7 @@ func (t Messions) Value() (driver.Value, error) {
 // Scan 实现sql.Scanner接口，用于从数据库读取TeamsOwn数据
 // 参数:
 //   - value: 从数据库读取的原始值
+//
 // 返回值:
 //   - error: 可能出现的错误
 func (t *TeamsOwn) Scan(value interface{}) error {
