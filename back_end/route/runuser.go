@@ -198,35 +198,35 @@ func DeleteUser() gin.HandlerFunc {
 // 该函数返回一个gin.HandlerFunc，用于处理用户加入团队的逻辑
 func JoinTeam() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// 从请求中获取用户信息
-		user, e := tool.GetUser(ctx)
-		if e != nil {
-			ctx.JSON(400, gin.H{"error": "Invalid user data"})
-			return
+		// 从请求中获取信息
+		var request struct {
+			UserUID      uint `json:"userUID"`
+			TeamUID      uint `json:"teamUID"`
+			TeamPassword uint `json:"teamPassword"`
 		}
 
-		// 从请求中获取团队信息
-		team, e := tool.GetTeam(ctx)
-		if e != nil {
-			ctx.JSON(400, gin.H{"error": "Invalid team data"})
-			return
-		}
+		ctx.ShouldBindJSON(&request)
 
 		// 检查用户是否存在
-		user, e = data.NewUser().Get(user.UserUID)
+		user, e := data.NewUser().Get(request.UserUID)
 		if e != nil {
 			ctx.JSON(404, gin.H{"error": "User not found"})
 			return
 		}
 
 		// 检查团队是否存在
-		team, e = data.NewTeam().Get(team.TeamUID)
+		team, e := data.NewTeam().Get(request.TeamUID)
 		if e != nil {
 			ctx.JSON(404, gin.H{"error": "Team not found"})
 			return
 		}
 
 		// 用户加入团队
+		if team.TeamPassword != request.TeamPassword {
+			ctx.JSON(403, gin.H{"error": "Incorrect team password"})
+			return
+		}
+
 		user.TeamsBelong = append(user.TeamsBelong, data.TeamBelong{
 			TeamUID:         team.TeamUID,
 			Score:           0,
@@ -257,29 +257,24 @@ func JoinTeam() gin.HandlerFunc {
 // 该函数返回一个gin.HandlerFunc，用于处理用户离开团队的逻辑
 func LeaveTeam() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// 从请求中获取用户信息
-		user, e := tool.GetUser(ctx)
-		if e != nil {
-			ctx.JSON(400, gin.H{"error": "Invalid user data"})
-			return
+		// 从请求中获取信息
+		var request struct {
+			UserUID      uint `json:"userUID"`
+			TeamUID      uint `json:"teamUID"`
+			TeamPassword uint `json:"teamPassword"`
 		}
 
-		// 从请求中获取团队信息
-		team, e := tool.GetTeam(ctx)
-		if e != nil {
-			ctx.JSON(400, gin.H{"error": "Invalid team data"})
-			return
-		}
+		ctx.ShouldBindJSON(&request)
 
 		// 检查用户是否存在
-		user, e = data.NewUser().Get(user.UserUID)
+		user, e := data.NewUser().Get(request.UserUID)
 		if e != nil {
 			ctx.JSON(404, gin.H{"error": "User not found"})
 			return
 		}
 
 		// 检查团队是否存在
-		team, e = data.NewTeam().Get(team.TeamUID)
+		team, e := data.NewTeam().Get(request.TeamUID)
 		if e != nil {
 			ctx.JSON(404, gin.H{"error": "Team not found"})
 			return

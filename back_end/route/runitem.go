@@ -68,6 +68,7 @@ func CreateItem() gin.HandlerFunc {
 		// 创建新项目
 		count++
 		item.ItemUID = uint(count)
+		item.IsComplete = false
 		e = data.NewItem().Create(&item)
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to create item"})

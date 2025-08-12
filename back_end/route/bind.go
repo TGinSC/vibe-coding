@@ -29,7 +29,7 @@ func BindRoutes(router *gin.Engine) {
 		itemGroup.GET("/get/:itemuid", GetItem())
 		itemGroup.GET("/getlist", GetItems())
 		itemGroup.POST("/create/:teamuid", CreateItem())
-		itemGroup.POST("/update", UpdateItem())
+		itemGroup.POST("/update/:teamuid", UpdateItem())
 		itemGroup.POST("/delete", DeleteItem())
 	}
 }
