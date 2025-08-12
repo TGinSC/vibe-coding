@@ -1,18 +1,19 @@
 package main
 
 import (
-	"contribution/data"
+	"contribution/config"
 	"contribution/database"
+	"contribution/route"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	database.Open("data.db")
-	data.StoreExampleData()
-	data.GetExampleData()
-	data.UpdataExampleData()
-	data.GetExampleData()
-	data.DeleteExampleData()
-	// server := gin.Default()
+	__config__ := config.Config__
+	database.Open(__config__.DB_FILE)
+	server := gin.Default()
 
-	// server.Run()
+	route.BindRoutes(server)
+
+	server.Run(__config__.HttpPort)
 }
