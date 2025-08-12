@@ -8,12 +8,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var count = 0
+
 // GetItem 处理获取单个项目信息的HTTP请求
 // 该函数返回一个gin.HandlerFunc，用于处理获取项目信息逻辑
 func GetItem() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// 从URL参数中获取项目ID
-		uid := ctx.Param("uid")
+		uid := ctx.Param("itemuid")
 		if uid == "" {
 			ctx.JSON(400, gin.H{"error": "Item UID is required"})
 			return
@@ -64,9 +66,32 @@ func CreateItem() gin.HandlerFunc {
 		}
 
 		// 创建新项目
+		count++
+		item.ItemUID = uint(count)
 		e = data.NewItem().Create(&item)
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to create item"})
+			return
+		}
+
+		teamuid_string := ctx.Param("teamuid")
+		var teamuid uint
+		// 将字符串转换为uint
+		_, e = fmt.Sscanf(teamuid_string, "%d", &teamuid)
+		if e != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid team UID"})
+			return
+		}
+		// 将项目添加到团队
+		team, e := data.NewTeam().Get(teamuid)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "Team not found"})
+			return
+		}
+		team.ItemsInclude = append(team.ItemsInclude, item.ItemUID)
+		e = data.NewTeam().Updata(&team)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update team with new item"})
 			return
 		}
 
@@ -90,6 +115,55 @@ func UpdateItem() gin.HandlerFunc {
 		}
 
 		// 更新项目信息
+
+		teamuid_string := ctx.Param("teamuid")
+		var teamuid uint
+		// 将字符串转换为uint
+		_, e = fmt.Sscanf(teamuid_string, "%d", &teamuid)
+		if e != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid team UID"})
+			return
+		}
+		team, e := data.NewTeam().Get(teamuid)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "Team not found"})
+			return
+		}
+		// 检查项目是否在团队中
+		found := false
+		for _, itemUID := range team.ItemsInclude {
+			if itemUID == item.ItemUID {
+				found = true
+				break
+			}
+		}
+		if !found {
+			ctx.JSON(400, gin.H{"error": "Item not found in the specified team"})
+			return
+		}
+
+		// 如果项目标记为完成，更新团队成员的分数
+		if item.IsComplete {
+			useruid := item.BCB
+			user, e := data.NewUser().Get(uint(useruid))
+			if e != nil {
+				ctx.JSON(404, gin.H{"error": "User not found"})
+				return
+			}
+			for _, team := range user.TeamsBelong {
+				if team.TeamUID == teamuid {
+					team.Score += item.Score
+					break
+				}
+			}
+			// 更新用户信息
+			e = data.NewUser().Updata(&user)
+			if e != nil {
+				ctx.JSON(500, gin.H{"error": "Failed to update user score"})
+				return
+			}
+		}
+
 		e = data.NewItem().Updata(&item)
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to update item"})

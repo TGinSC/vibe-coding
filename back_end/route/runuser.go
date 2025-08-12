@@ -25,7 +25,8 @@ func Signup() gin.HandlerFunc {
 			return
 		}
 
-		// 2. 处理用户密码
+		// 2. 处理用户数据
+		// 检验是否存在
 		salt, e := __config__.SaltManager.ReadSalt()
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Internal server error"})
@@ -144,9 +145,15 @@ func UpdateUser() gin.HandlerFunc {
 			ctx.JSON(400, gin.H{"error": "Invalid user data"})
 			return
 		}
+		// 检查用户UID是否存在
+		__user__, e := data.NewUser().Get(user.UserUID)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "User not found"})
+			return
+		}
 
 		// 更新用户信息
-		e = data.NewUser().Updata(&user)
+		e = data.NewUser().Updata(&__user__)
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to update user"})
 			return
@@ -183,6 +190,173 @@ func DeleteUser() gin.HandlerFunc {
 		// 返回成功响应
 		ctx.JSON(200, gin.H{
 			"message": "User deleted successfully",
+		})
+	}
+}
+
+// JoinTeam 处理用户加入团队的HTTP请求
+// 该函数返回一个gin.HandlerFunc，用于处理用户加入团队的逻辑
+func JoinTeam() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// 从请求中获取用户信息
+		user, e := tool.GetUser(ctx)
+		if e != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid user data"})
+			return
+		}
+
+		// 从请求中获取团队信息
+		team, e := tool.GetTeam(ctx)
+		if e != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid team data"})
+			return
+		}
+
+		// 检查用户是否存在
+		user, e = data.NewUser().Get(user.UserUID)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "User not found"})
+			return
+		}
+
+		// 检查团队是否存在
+		team, e = data.NewTeam().Get(team.TeamUID)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "Team not found"})
+			return
+		}
+
+		// 用户加入团队
+		user.TeamsBelong = append(user.TeamsBelong, data.TeamBelong{
+			TeamUID:         team.TeamUID,
+			Score:           0,
+			PercentComplete: 0,
+		})
+		team.MembersInclude = append(team.MembersInclude, user.UserUID)
+		e = data.NewUser().Updata(&user)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update user"})
+			return
+		}
+		e = data.NewTeam().Updata(&team)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update team"})
+			return
+		}
+
+		// 返回成功响应
+		ctx.JSON(200, gin.H{
+			"message": "User joined team successfully",
+			"userUID": user.UserUID,
+			"teamUID": team.TeamUID,
+		})
+	}
+}
+
+// LeaveTeam 处理用户离开团队的HTTP请求
+// 该函数返回一个gin.HandlerFunc，用于处理用户离开团队的逻辑
+func LeaveTeam() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// 从请求中获取用户信息
+		user, e := tool.GetUser(ctx)
+		if e != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid user data"})
+			return
+		}
+
+		// 从请求中获取团队信息
+		team, e := tool.GetTeam(ctx)
+		if e != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid team data"})
+			return
+		}
+
+		// 检查用户是否存在
+		user, e = data.NewUser().Get(user.UserUID)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "User not found"})
+			return
+		}
+
+		// 检查团队是否存在
+		team, e = data.NewTeam().Get(team.TeamUID)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "Team not found"})
+			return
+		}
+
+		// 用户离开团队
+		newTeamsBelong := make([]data.TeamBelong, 0)
+		for _, tb := range user.TeamsBelong {
+			if tb.TeamUID != team.TeamUID {
+				newTeamsBelong = append(newTeamsBelong, tb)
+			}
+		}
+		user.TeamsBelong = newTeamsBelong
+
+		newMembersInclude := make([]uint, 0)
+		for _, uid := range team.MembersInclude {
+			if uid != user.UserUID {
+				newMembersInclude = append(newMembersInclude, uid)
+			}
+		}
+		team.MembersInclude = newMembersInclude
+
+		e = data.NewUser().Updata(&user)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update user"})
+			return
+		}
+		e = data.NewTeam().Updata(&team)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update team"})
+			return
+		}
+
+		// 返回成功响应
+		ctx.JSON(200, gin.H{
+			"message": "User left team successfully",
+			"userUID": user.UserUID,
+			"teamUID": team.TeamUID,
+		})
+	}
+}
+
+// UpdateUserPassword 处理更新用户密码的HTTP请求
+// 该函数返回一个gin.HandlerFunc，用于处理更新用户密码的逻辑
+func UpdateUserPassword() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// 从请求中获取用户信息
+		user, e := tool.GetUser(ctx)
+		if e != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid user data"})
+			return
+		}
+		// 检查用户UID是否存在
+		user, e = data.NewUser().Get(user.UserUID)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "User not found"})
+			return
+		}
+		// 获取盐值
+		salt, e := __config__.SaltManager.ReadSalt()
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Internal server error"})
+			return
+		}
+		// 哈希处理用户密码
+		hashedPassword, _ := __config__.DefaultHashConfig.HashPassword(user.UserPassword, salt)
+		user.UserPassword = hashedPassword
+		// 更新用户信息
+		e = data.NewUser().Updata(&user)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update user password"})
+			return
+		}
+		// 返回成功响应
+		ctx.JSON(200, gin.H{
+			"message": "User password updated successfully",
+			"userUID": user.UserUID,
 		})
 	}
 }

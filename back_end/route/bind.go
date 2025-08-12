@@ -7,24 +7,28 @@ func BindRoutes(router *gin.Engine) {
 	{
 		userGroup.POST("/signup", Signup())
 		userGroup.POST("/signin", Signin())
-		userGroup.GET("/get", GetUser())
+		userGroup.GET("/get/:uid", GetUser())
 		userGroup.GET("/getlist", GetUsers())
 		userGroup.POST("/update", UpdateUser())
 		userGroup.POST("/delete", DeleteUser())
+		userGroup.POST("/jointeam", JoinTeam())
+		userGroup.POST("/leaveteam", LeaveTeam())
+		userGroup.POST("/updatepassword", UpdateUserPassword())
 	}
 	teamGroup := router.Group("/team")
 	{
-		teamGroup.GET("/get", GetTeam())
+		teamGroup.GET("/get/:teamuid", GetTeam())
 		teamGroup.GET("/getlist", GetTeams())
 		teamGroup.POST("/create", CreateTeam())
 		teamGroup.POST("/update", UpdateTeam())
 		teamGroup.POST("/delete", DeleteTeam())
+		teamGroup.POST("/updatepassword", UpdateTeamPassword())
 	}
 	itemGroup := router.Group("/item")
 	{
-		itemGroup.GET("/get", GetItem())
+		itemGroup.GET("/get/:itemuid", GetItem())
 		itemGroup.GET("/getlist", GetItems())
-		itemGroup.POST("/create", CreateItem())
+		itemGroup.POST("/create/:teamuid", CreateItem())
 		itemGroup.POST("/update", UpdateItem())
 		itemGroup.POST("/delete", DeleteItem())
 	}

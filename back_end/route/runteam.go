@@ -13,7 +13,7 @@ import (
 func GetTeam() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// 从URL参数中获取团队ID
-		uid := ctx.Param("uid")
+		uid := ctx.Param("teamuid")
 		if uid == "" {
 			ctx.JSON(400, gin.H{"error": "Team UID is required"})
 			return
@@ -126,6 +126,41 @@ func DeleteTeam() gin.HandlerFunc {
 		// 返回成功响应
 		ctx.JSON(200, gin.H{
 			"message": "Team deleted successfully",
+		})
+	}
+}
+
+// UpdateTeamPassword 处理更新团队密码的HTTP请求
+// 该函数返回一个gin.HandlerFunc，用于处理更新团队密码逻辑
+func UpdateTeamPassword() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// 从请求中获取团队信息
+		team, e := tool.GetTeam(ctx)
+		if e != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid team data"})
+			return
+		}
+		password := team.TeamPassword
+
+		// 检查团队是否存在
+		team, e = data.NewTeam().Get(team.TeamUID)
+		if e != nil {
+			ctx.JSON(404, gin.H{"error": "Team not found"})
+			return
+		}
+
+		// 更新团队密码
+		team.TeamPassword = password
+		e = data.NewTeam().Updata(&team)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update team password"})
+			return
+		}
+
+		// 返回成功响应
+		ctx.JSON(200, gin.H{
+			"message": "Team password updated successfully",
+			"teamUID": team.TeamUID,
 		})
 	}
 }
