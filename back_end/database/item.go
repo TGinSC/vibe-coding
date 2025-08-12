@@ -11,11 +11,12 @@ type BCB uint
 
 // ItemModel 定义项目项数据库模型结构体
 type ItemModel struct {
-	ItemUID    uint      `grom:"unique;primarykey" json:"itemUID"`  // 项目项唯一标识符（主键）
-	Score      uint      `json:"score"`           // 项目项的分数值
-	ShouldBCB  ShouldBCB `json:"shouldBeCompletedBy"` // 应该完成该项目项的人员ID
-	BCB        BCB       `json:"beCompletedBy"`   // 实际完成该项目项的人员ID
-	IsComplete bool      `json:"isComplete"`      // 项目项是否已完成的标志
+	ItemUID    uint      `grom:"unique;primarykey" json:"itemUID"` // 项目项唯一标识符（主键）
+	Content    string    `json:"content"`                          // 项目项的内容描述
+	Score      uint      `json:"score"`                            // 项目项的分数值
+	ShouldBCB  ShouldBCB `json:"shouldBeCompletedBy"`              // 应该完成该项目项的人员ID
+	BCB        BCB       `json:"beCompletedBy"`                    // 实际完成该项目项的人员ID
+	IsComplete bool      `json:"isComplete"`                       // 项目项是否已完成的标志
 }
 
 // NewItemModel 创建并返回一个新的ItemModel实例

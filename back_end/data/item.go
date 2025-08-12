@@ -13,11 +13,12 @@ type BCB uint
 
 // Item 定义项目项结构体，表示系统中的一个任务或项目项
 type Item struct {
-	ItemUID    uint      `json:"itemUID"`        // 项目项唯一标识符
-	Score      uint      `json:"score"`          // 项目项的分数值
+	ItemUID    uint      `json:"itemUID"`             // 项目项唯一标识符
+	Content    string    `json:"content"`             // 项目项的内容描述
+	Score      uint      `json:"score"`               // 项目项的分数值
 	ShouldBCB  ShouldBCB `json:"shouldBeCompletedBy"` // 应该完成该项目项的人员ID
-	BCB        BCB       `json:"beCompletedBy"`  // 实际完成该项目项的人员ID
-	IsComplete bool      `json:"isComplete"`     // 项目项是否已完成的标志
+	BCB        BCB       `json:"beCompletedBy"`       // 实际完成该项目项的人员ID
+	IsComplete bool      `json:"isComplete"`          // 项目项是否已完成的标志
 }
 
 // NewItem 创建并返回一个新的Item实例
@@ -70,6 +71,7 @@ func (*Item) Updata(item *Item) error {
 func (item Item) ToStore() *database.ItemModel {
 	return &database.ItemModel{
 		ItemUID:    item.ItemUID,
+		Content:    item.Content,
 		Score:      item.Score,
 		ShouldBCB:  database.ShouldBCB(item.ShouldBCB),
 		BCB:        database.BCB(item.BCB),
