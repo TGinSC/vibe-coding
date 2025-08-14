@@ -1,6 +1,9 @@
 package route
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"contribution/back_end/ai"
+)
 
 func BindRoutes(router *gin.Engine) {
 	userGroup := router.Group("/user")
@@ -31,5 +34,9 @@ func BindRoutes(router *gin.Engine) {
 		itemGroup.POST("/create/:teamuid", CreateItem())
 		itemGroup.POST("/update/:teamuid", UpdateItem())
 		itemGroup.POST("/delete", DeleteItem())
+	}
+	aiGroup := router.Group("/ai")
+	{
+		aiGroup.POST("/assist", ai.AIHandler)
 	}
 }
