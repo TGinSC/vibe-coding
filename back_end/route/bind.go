@@ -2,7 +2,6 @@ package route
 
 import (
 	"github.com/gin-gonic/gin"
-	"contribution/back_end/ai"
 )
 
 func BindRoutes(router *gin.Engine) {
@@ -37,6 +36,6 @@ func BindRoutes(router *gin.Engine) {
 	}
 	aiGroup := router.Group("/ai")
 	{
-		aiGroup.POST("/assist", ai.AIHandler)
+		aiGroup.POST("/assist", AIHandler())
 	}
 }
