@@ -3,7 +3,9 @@ package config
 import (
 	"contribution/tool"
 	"encoding/hex"
+	"os"
 )
+
 
 type Config struct {
 	HttpPort          string
@@ -11,6 +13,7 @@ type Config struct {
 	SALT_FILE         string
 	SaltManager       *tool.SaltManager
 	DefaultHashConfig *tool.SimpleHash
+	HuggingFaceAPIKey string
 }
 
 var Config__ *Config = ConfigInit()
@@ -24,6 +27,7 @@ func ConfigInit() *Config {
 		SALT_FILE:         "salt.json",
 		SaltManager:       tool.NewSaltManager("salt.json"),
 		DefaultHashConfig: tool.NewDefaultHash(),
+		HuggingFaceAPIKey: os.Getenv("HUGGING_FACE_API_KEY"), 
 	}
 	saltBytes, e := config.DefaultHashConfig.GenerateSalt()
 	if e != nil {
