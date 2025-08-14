@@ -20,7 +20,7 @@ func main() {
 	server := gin.Default()
 
 	route.BindRoutes(server)
-	route.RunAI(r)
+	route.RunAI(server)
 
 	server.Run(__config__.HttpPort)
 }

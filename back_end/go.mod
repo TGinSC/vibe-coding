@@ -28,6 +28,7 @@ require (
 	golang.org/x/arch v0.8.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	github.com/gin-gonic/gin v1.7.7
 )
 
 require (
