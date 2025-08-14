@@ -5,9 +5,10 @@ import (
 	"contribution/database"
 	"contribution/route"
 
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"log"
 )
 
 func main() {
@@ -20,7 +21,6 @@ func main() {
 	server := gin.Default()
 
 	route.BindRoutes(server)
-	route.RunAI(server)
 
 	server.Run(__config__.HttpPort)
 }
