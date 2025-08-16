@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/songzhibin97/gkit/tools/float"
 )
 
 var count = 0
@@ -167,7 +166,7 @@ func UpdateItem() gin.HandlerFunc {
 							BCBcount++
 						}
 					}
-					tb.PercentComplete = float(BCBcount) / float(ShouldBCBcount)
+					tb.PercentComplete = uint((float32(BCBcount) / float32(ShouldBCBcount)) * 100)
 					break
 				}
 			}
