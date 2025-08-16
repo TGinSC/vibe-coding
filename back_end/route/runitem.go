@@ -4,6 +4,7 @@ import (
 	"contribution/data"
 	"contribution/tool"
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -90,6 +91,11 @@ func CreateItem() gin.HandlerFunc {
 			return
 		}
 		team.ItemsInclude = append(team.ItemsInclude, item.ItemUID)
+		startTime := time.Now().Unix()
+		_ = data.NewTime().Create(&data.Time{
+			ItemUID: item.ItemUID,
+			Time:    uint64(startTime),
+		})
 		e = data.NewTeam().Updata(&team)
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to update team with new item"})
