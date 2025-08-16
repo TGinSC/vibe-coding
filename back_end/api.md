@@ -399,3 +399,32 @@ URL: 127.0.0.1:1411/item/:itemuid
  "message": "string",
 }
 ```
+
+---
+
+
+# "/ai"
+
+## `POST`
+
+### "/assist"
+
+请求：
+```json
+{
+  "prompt": "string",
+  "userUID": 1,
+  "teamUID": 1
+}
+```
+响应：
+
+```json
+{
+  "error": "string",
+  "message": "string",
+  "response": "string"
+}
+```
+
+---

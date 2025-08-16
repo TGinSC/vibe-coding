@@ -3,3 +3,5 @@ data.db
 prompt.md
 salt_test.json
 salt.json
+back_end/.env
+.env

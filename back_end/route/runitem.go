@@ -145,15 +145,37 @@ func UpdateItem() gin.HandlerFunc {
 
 		// 如果项目标记为完成，更新团队成员的分数
 		if item.IsComplete {
-			useruid := item.BCB
+			useruid := uint(item.BCB)
 			user, e := data.NewUser().Get(uint(useruid))
 			if e != nil {
 				ctx.JSON(404, gin.H{"error": "User not found"})
 				return
 			}
-			for _, team := range user.TeamsBelong {
-				if team.TeamUID == teamuid {
-					team.Score += item.Score
+			for _, tb := range user.TeamsBelong {
+				if tb.TeamUID == teamuid {
+					// 更新用户分数
+					tb.Score += item.Score
+					// 计算完成百分比
+					var ShouldBCBcount, BCBcount = 0, 0
+					for _, itemUID := range team.ItemsInclude {
+						item, _ := data.NewItem().Get(itemUID)
+						if useruid == uint(item.ShouldBCB) && !item.IsComplete {
+							ShouldBCBcount++
+						}
+						if useruid == uint(item.BCB) && item.IsComplete {
+							BCBcount++
+						}
+					}
+					tb.PercentComplete = uint((float32(BCBcount) / float32(ShouldBCBcount)) * 100)
+
+					NewTeamsBelong := make([]data.TeamBelong, 0)
+					for _, tbb := range user.TeamsBelong {
+						if tbb.TeamUID != teamuid {
+							NewTeamsBelong = append(NewTeamsBelong, tbb)
+						}
+					}
+					NewTeamsBelong = append(NewTeamsBelong, tb)
+					user.TeamsBelong = NewTeamsBelong
 					break
 				}
 			}
