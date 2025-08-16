@@ -6,7 +6,6 @@ import (
 	"os"
 )
 
-
 type Config struct {
 	HttpPort          string
 	DB_FILE           string
@@ -22,12 +21,12 @@ func ConfigInit() *Config {
 	// 初始化配置
 
 	config := &Config{
-		HttpPort:          ":1411",
+		HttpPort:          ":8081",
 		DB_FILE:           "data.db",
 		SALT_FILE:         "salt.json",
 		SaltManager:       tool.NewSaltManager("salt.json"),
 		DefaultHashConfig: tool.NewDefaultHash(),
-		HuggingFaceAPIKey: os.Getenv("HUGGING_FACE_API_KEY"), 
+		HuggingFaceAPIKey: os.Getenv("HUGGING_FACE_API_KEY"),
 	}
 	saltBytes, e := config.DefaultHashConfig.GenerateSalt()
 	if e != nil {
