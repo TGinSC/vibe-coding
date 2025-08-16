@@ -167,6 +167,15 @@ func UpdateItem() gin.HandlerFunc {
 						}
 					}
 					tb.PercentComplete = uint((float32(BCBcount) / float32(ShouldBCBcount)) * 100)
+
+					NewTeamsBelong := make([]data.TeamBelong, 0)
+					for _, tbb := range user.TeamsBelong {
+						if tbb.TeamUID != teamuid {
+							NewTeamsBelong = append(NewTeamsBelong, tbb)
+						}
+					}
+					NewTeamsBelong = append(NewTeamsBelong, tb)
+					user.TeamsBelong = NewTeamsBelong
 					break
 				}
 			}
