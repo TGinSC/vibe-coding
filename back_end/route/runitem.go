@@ -4,6 +4,7 @@ import (
 	"contribution/data"
 	"contribution/tool"
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -58,18 +59,23 @@ func GetItems() gin.HandlerFunc {
 // 该函数返回一个gin.HandlerFunc，用于处理创建项目逻辑
 func CreateItem() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// 从请求中获取项目信息
-		item, e := tool.GetItem(ctx)
-		if e != nil {
-			ctx.JSON(400, gin.H{"error": "Invalid item data"})
-			return
+		var request struct {
+			Content    string `json:"content"`
+			Score      uint   `json:"score"`
+			ExpectTime uint64 `json:"expectTime"`
+			ShouldBCB  uint   `json:"shouldBCB"`
 		}
+		// 从请求中获取项目信息
+		ctx.ShouldBindJSON(&request)
 
 		// 创建新项目
 		count++
-		item.ItemUID = uint(count)
-		item.IsComplete = false
-		e = data.NewItem().Create(&item)
+		e := data.NewItem().Create(&data.Item{
+			ItemUID:   uint(count),
+			Content:   request.Content,
+			Score:     request.Score,
+			ShouldBCB: data.ShouldBCB(request.ShouldBCB),
+		})
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to create item"})
 			return
@@ -89,7 +95,13 @@ func CreateItem() gin.HandlerFunc {
 			ctx.JSON(404, gin.H{"error": "Team not found"})
 			return
 		}
-		team.ItemsInclude = append(team.ItemsInclude, item.ItemUID)
+		team.ItemsInclude = append(team.ItemsInclude, uint(count))
+		startTime := time.Now().Unix()
+		_ = data.NewTime().Create(&data.Time{
+			ItemUID:    uint(count),
+			Time:       uint64(startTime),
+			ExpectTime: request.ExpectTime,
+		})
 		e = data.NewTeam().Updata(&team)
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to update team with new item"})
@@ -99,7 +111,7 @@ func CreateItem() gin.HandlerFunc {
 		// 返回响应
 		ctx.JSON(200, gin.H{
 			"message": "Item created successfully",
-			"itemUID": item.ItemUID,
+			"itemUID": count,
 		})
 	}
 }
@@ -145,6 +157,8 @@ func UpdateItem() gin.HandlerFunc {
 
 		// 如果项目标记为完成，更新团队成员的分数
 		if item.IsComplete {
+			itemTime := data.NewTime().FinishTime(item.ItemUID, uint64(time.Now().Unix()))
+			data.NewTime().Updata(&itemTime)
 			useruid := uint(item.BCB)
 			user, e := data.NewUser().Get(uint(useruid))
 			if e != nil {
@@ -198,6 +212,71 @@ func UpdateItem() gin.HandlerFunc {
 			"message": "Item updated successfully",
 			"itemUID": item.ItemUID,
 		})
+	}
+}
+
+func CompleteItem() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var request struct {
+			ItemUID uint `json:"itemUID"`
+			BCB     uint `json:"BCB"`
+			TeamUID uint `json:"teamUID"`
+			UserUID uint `json:"userUID"`
+		}
+		err := ctx.ShouldBindJSON(&request)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error": "Invalid request body"})
+			return
+		}
+		// 获取项目
+		item, err := data.NewItem().Get(request.ItemUID)
+		if err != nil {
+			ctx.JSON(404, gin.H{"error": "Item not found"})
+			return
+		}
+		itemtime, err := data.NewTime().Get(request.ItemUID)
+		if err != nil {
+			ctx.JSON(404, gin.H{"error": "Item time not found"})
+			return
+		}
+		// 获取团队
+		_, err = data.NewTeam().Get(request.TeamUID)
+		if err != nil {
+			ctx.JSON(404, gin.H{"error": "Team not found"})
+			return
+		}
+		// 获取用户
+		user, err := data.NewUser().Get(request.UserUID)
+		if err != nil {
+			ctx.JSON(404, gin.H{"error": "User not found"})
+			return
+		}
+		// 检查项目是否已完成
+		if item.IsComplete {
+			ctx.JSON(400, gin.H{"error": "Item is already complete"})
+			return
+		}
+		// 更新项目状态
+		item.IsComplete = true
+		item.BCB = data.BCB(request.BCB)
+		data.NewItem().Updata(&item)
+		itemtime.RealTime = uint64(time.Now().Unix())
+		data.NewTime().Updata(&itemtime)
+		for _, tb := range user.TeamsBelong {
+			if tb.TeamUID == request.TeamUID {
+				// 更新用户分数
+				score, err := data.NewScore().Get(tb.Score)
+				if err != nil {
+					ctx.JSON(404, gin.H{"error": "Score not found"})
+					return
+				}
+				scoreptr := &score
+				scoreptr = scoreptr.Update()
+				data.NewScore().Updata(scoreptr)
+				break
+			}
+		}
+		ctx.JSON(200, gin.H{"message": "Item marked as complete successfully"})
 	}
 }
 

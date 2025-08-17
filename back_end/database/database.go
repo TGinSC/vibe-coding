@@ -39,6 +39,18 @@ func Open(source string) (e error) {
 	if e != nil {
 		return
 	}
+
+	// 自动迁移ItemTimeModel表
+	e = database.AutoMigrate(&ItemTimeModel{})
+	if e != nil {
+		return
+	}
+
+	// 自动迁移ScoreModel表
+	e = database.AutoMigrate(&ScoreModel{})
+	if e != nil {
+		return
+	}
 	
 	return
 }
