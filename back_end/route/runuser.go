@@ -194,6 +194,8 @@ func DeleteUser() gin.HandlerFunc {
 	}
 }
 
+var scorecount = 0
+
 // JoinTeam 处理用户加入团队的HTTP请求
 // 该函数返回一个gin.HandlerFunc，用于处理用户加入团队的逻辑
 func JoinTeam() gin.HandlerFunc {
@@ -229,8 +231,16 @@ func JoinTeam() gin.HandlerFunc {
 
 		user.TeamsBelong = append(user.TeamsBelong, data.TeamBelong{
 			TeamUID:         team.TeamUID,
-			Score:           0,
+			Score:           uint(scorecount),
 			PercentComplete: 0,
+		})
+		data.NewScore().Create(&data.Score{
+			ScoreUID:       uint(scorecount),
+			UserUID:        user.UserUID,
+			TeamUID:        team.TeamUID,
+			TaskProgress:   0.0,
+			TeamWork:       0.0,
+			TimeEfficiency: 0.0,
 		})
 		team.MembersInclude = append(team.MembersInclude, user.UserUID)
 		e = data.NewUser().Updata(&user)

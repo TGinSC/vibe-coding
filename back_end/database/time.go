@@ -2,8 +2,10 @@ package database
 
 // ItemTimeModel 定义项目项时间数据库模型结构体
 type ItemTimeModel struct {
-	ItemUID uint   `gorm:"unique;primarykey" json:"itemUID"` // 项目项唯一标识符（主键）
-	Time    uint64 `json:"time"`                             // 时间
+	ItemUID    uint   `gorm:"unique;primarykey" json:"itemUID"` // 项目项唯一标识符（主键）
+	Time       uint64 `json:"time"`                             // 时间
+	ExpectTime uint64 `json:"expectTime"`                       // 预计时间
+	RealTime   uint64 `json:"realTime"`                         // 实际时间
 }
 
 // NewItemTimeModel 创建并返回一个新的ItemTimeModel实例

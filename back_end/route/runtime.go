@@ -10,9 +10,9 @@ import (
 
 func GetDeltaTime() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		request := struct {
+		var request struct {
 			itemUID uint `json:"itemUID"`
-		}{}
+		}
 		err := ctx.ShouldBindJSON(&request)
 		if err != nil {
 			ctx.JSON(400, gin.H{"error": "Invalid request body"})

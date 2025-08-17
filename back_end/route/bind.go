@@ -34,9 +34,14 @@ func BindRoutes(router *gin.Engine) {
 		itemGroup.POST("/update/:teamuid", UpdateItem())
 		itemGroup.POST("/delete", DeleteItem())
 		itemGroup.POST("/deltatime", GetDeltaTime())
+		itemGroup.POST("/complete", CompleteItem())
 	}
 	aiGroup := router.Group("/ai")
 	{
 		aiGroup.POST("/assist", AIHandler())
+	}
+	scoreGroup := router.Group("/score")
+	{
+		scoreGroup.POST("/getpersonal", GetPersonalScore())
 	}
 }

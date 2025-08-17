@@ -3,6 +3,8 @@
 - ["/user"](#user)
 - ["/team"](#team)
 - ["/item"](#item)
+- ["/ai"](#ai)
+- ["/score"](#score)
 
 ---
 
@@ -327,7 +329,8 @@ URL: 127.0.0.1:1411/item/:itemuid
   "score": 1,
   "shouldBeCompletedBy": 1,
   "beCompletedBy": 1,
-  "isComplete": true
+  "isComplete": true,
+  "ExpectTime": 1
  }
 }
 ```
@@ -357,6 +360,8 @@ URL: 127.0.0.1:1411/item/:itemuid
 ```
 
 ### "/updata"
+
+(现以停用，如需更新请使用"/complete")
 
 请求：127.0.0.1:1411/item/update/:teamuid
 
@@ -400,6 +405,19 @@ URL: 127.0.0.1:1411/item/:itemuid
 }
 ```
 
+### "/complete"
+
+请求：
+
+响应：
+
+```json
+{
+  "error": "string",
+  "message": "string"
+}
+```
+
 ---
 
 
@@ -410,6 +428,7 @@ URL: 127.0.0.1:1411/item/:itemuid
 ### "/assist"
 
 请求：
+
 ```json
 {
   "prompt": "string",
@@ -428,3 +447,33 @@ URL: 127.0.0.1:1411/item/:itemuid
 ```
 
 ---
+
+# "/score"
+
+## `POST`
+
+### "/getpersonal"
+
+请求：
+
+```json
+{
+  "userUID": 1,
+  "teamUID": 1
+}
+```
+响应：
+
+```json
+{
+  "error": "string",
+  "score": {
+    "scoreUID": 1,
+    "userUID": 1,
+    "teamUID": 1,
+    "taskProgress": 1.0,
+    "teamWork": 1.0,
+    "timeEfficiency": 1.0
+  }
+}
+```

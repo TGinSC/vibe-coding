@@ -2,12 +2,15 @@ package data
 
 import (
 	"contribution/database"
+	"time"
 )
 
 // Time 定义时间结构体，表示系统中的时间记录
 type Time struct {
-	ItemUID uint   `json:"itemUID"` // 项目项唯一标识符
-	Time    uint64 `json:"time"`    // 时间记录
+	ItemUID    uint   `json:"itemUID"`    // 项目项唯一标识符
+	Time       uint64 `json:"time"`       // 时间记录
+	ExpectTime uint64 `json:"expectTime"` // 预计时间
+	RealTime   uint64 `json:"realTime"`   // 实际时间
 }
 
 // NewTime 创建并返回一个新的Time实例
@@ -70,8 +73,10 @@ func (*Time) DataName() string {
 //   - *database.ItemTimeModel: 转换后的数据库模型对象
 func (time Time) ToStore() *database.ItemTimeModel {
 	return &database.ItemTimeModel{
-		ItemUID: time.ItemUID,
-		Time:    time.Time,
+		ItemUID:    time.ItemUID,
+		Time:       time.Time,
+		ExpectTime: time.ExpectTime,
+		RealTime:   time.RealTime,
 	}
 }
 
@@ -83,8 +88,20 @@ func (time Time) ToStore() *database.ItemTimeModel {
 //   - time: 业务逻辑可用的时间记录信息
 func TimeToUse(__time__ database.ItemTimeModel) (time Time) {
 	time = Time{
-		ItemUID: __time__.ItemUID,
-		Time:    __time__.Time,
+		ItemUID:    __time__.ItemUID,
+		Time:       __time__.Time,
+		ExpectTime: __time__.ExpectTime,
+		RealTime:   __time__.RealTime,
 	}
 	return
+}
+
+func (*Time) FinishTime(uid uint, realTime uint64) Time {
+	tick := time.Now().Unix()
+	itemTime, err := NewTime().Get(uid)
+	if err != nil {
+		return Time{}
+	}
+	itemTime.RealTime = uint64(tick)
+	return itemTime
 }
