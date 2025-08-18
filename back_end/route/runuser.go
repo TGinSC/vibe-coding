@@ -229,6 +229,7 @@ func JoinTeam() gin.HandlerFunc {
 			return
 		}
 
+		scorecount++
 		user.TeamsBelong = append(user.TeamsBelong, data.TeamBelong{
 			TeamUID:         team.TeamUID,
 			Score:           uint(scorecount),
@@ -291,7 +292,7 @@ func LeaveTeam() gin.HandlerFunc {
 		}
 
 		// 用户离开团队
-		newTeamsBelong := make([]data.TeamBelong, 0)
+		var newTeamsBelong data.TeamBelongs
 		for _, tb := range user.TeamsBelong {
 			if tb.TeamUID != team.TeamUID {
 				newTeamsBelong = append(newTeamsBelong, tb)
@@ -299,7 +300,7 @@ func LeaveTeam() gin.HandlerFunc {
 		}
 		user.TeamsBelong = newTeamsBelong
 
-		newMembersInclude := make([]uint, 0)
+		var newMembersInclude data.Members
 		for _, uid := range team.MembersInclude {
 			if uid != user.UserUID {
 				newMembersInclude = append(newMembersInclude, uid)
@@ -307,12 +308,23 @@ func LeaveTeam() gin.HandlerFunc {
 		}
 		team.MembersInclude = newMembersInclude
 
-		e = data.NewUser().Updata(&user)
+		// 更新用户和团队信息
+		e = data.NewUser().Delete(user.UserUID)
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to update user"})
 			return
 		}
-		e = data.NewTeam().Updata(&team)
+		e = data.NewUser().Create(&user)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update user"})
+			return
+		}
+		e = data.NewTeam().Delete(team.TeamUID)
+		if e != nil {
+			ctx.JSON(500, gin.H{"error": "Failed to update team"})
+			return
+		}
+		e = data.NewTeam().Create(&team)
 		if e != nil {
 			ctx.JSON(500, gin.H{"error": "Failed to update team"})
 			return

@@ -174,9 +174,12 @@ func (score *Score) UpdataTimeEfficiency() {
 				timecost = append(timecost, time)
 			}
 
+			sum := float32(0.0)
 			for i, _ := range weight {
+				sum += float32(weight[i])
 				timeEfficiency += float32(weight[i]) * float32(timecost[i])
 			}
+			timeEfficiency /= sum
 		}
 	}
 	score.TimeEfficiency = float32(timeEfficiency) // 假设时间效率是以百分比表示的
