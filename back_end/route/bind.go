@@ -1,10 +1,12 @@
 package route
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func BindRoutes(router *gin.Engine) {
+	router.Use(cors.Default())
 	userGroup := router.Group("/user")
 	{
 		userGroup.POST("/signup", Signup())
