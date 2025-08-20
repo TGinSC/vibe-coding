@@ -3,6 +3,9 @@
 ### 项目选题：3.完成一个能解决生活中某个问题的工具，更多用户的认可是重要的衡量标准。   
 ### 项目名称：静默协作 -- What can I say？摆烂out!  
 
+### 创意来源
+没有经历过“十人小组八人摆烂”的小组作业，那么你的大学小组作业注定是“空虚而失败”的。为了尽可能减少这种让人面色红润的事情再次发生，我们设计了这款应用，来向团队中的摆烂行为说不。
+
 ### 项目简介  
 静默协作 是一款专注于任务执行透明度的工具。该工具支持组长与组员自主创建与分配任务，实现过程可视化，并通过客观量化成员进度的评分系统，形成有效的良性监督机制，从而缓解“摆烂”行为。
 
@@ -24,8 +27,14 @@
 ## 快速开始
 
 ```
+# 后端
 git clone https://github.com/TGinSC/vibe-coding.git
 cd ./vibe-coding/back_end
 go mod tidy
 go run main.go
+# 前端
+git clone https://github.com/Adam-code-line/SilentFlow.git
+cd SilentFlow
+flutter pub get
+flutter run
 ```  
